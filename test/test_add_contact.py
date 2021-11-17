@@ -12,8 +12,7 @@ def app(request):
 
 
 def test_add_contact(app):
-    app.open_home_page()
-    app.login(username="admin", password="secret")
+    app.session.login(username="admin", password="secret")
     app.open_add_new_contact_page()
     app.add_new_contact(Contact(firstname="first_name", middlename="middle_name", lastname="last_name",
                                 nickname="nickname", title="title", company="company", address="Any street 26 49",
@@ -23,4 +22,4 @@ def test_add_contact(app):
                                 anniversary_month="November", anniversary_year="2002", address2="Other street 15 36",
                                 home_phone_number2="+754236986", notes="notes notes notes"))
     app.view_new_contact_at_homepage()
-    app.logout()
+    app.session.logout()
