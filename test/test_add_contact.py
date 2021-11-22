@@ -12,5 +12,5 @@ def test_add_contact(app):
                                homepage="homepage.com", birth_day="2", birth_month="July", birth_year="1955", anniversary_day="14",
                                anniversary_month="November", anniversary_year="2002", address2="Other street 15 36",
                                home_phone_number2="+754236986", notes="notes notes notes"))
-    app.contact.view_new_contact_at_homepage()
+    app.contact.view_contacts_at_homepage()
     app.session.logout()
