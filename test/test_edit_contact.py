@@ -14,3 +14,9 @@ def test_edit_first_contact(app):
                                            anniversary_year="2003", address2="New lane 101 3", home_phone_number2="+754236999",
                                            notes="some updated notes"))
     app.session.logout()
+
+
+def test_edit_first_contact_mobile(app):
+    app.session.login(username="admin", password="secret")
+    app.contact.edit_first_contact(Contact(mobile_phone_number="+79998887766"))
+    app.session.logout()
