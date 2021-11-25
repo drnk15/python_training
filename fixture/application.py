@@ -11,7 +11,7 @@ class Application:
         self.wd = webdriver.Firefox()
         self.select = Select
         self.alert = Alert
-        self.wd.implicitly_wait(60)
+        self.wd.implicitly_wait(5)
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
         self.contact = ContactHelper(self)
