@@ -3,7 +3,6 @@ from model.contact import Contact
 
 
 def test_edit_first_contact(app):
-    app.session.login(username="admin", password="secret")
     app.contact.edit_first_contact(Contact(firstname="new_first_name", middlename="new_middle_name", lastname="new_last_name",
                                            nickname="new_nickname", title="new_title", company="new_company",
                                            address="New street 27 302", home_phone_number="+78885566",
@@ -13,10 +12,7 @@ def test_edit_first_contact(app):
                                            birth_year="1966", anniversary_day="28", anniversary_month="December",
                                            anniversary_year="2003", address2="New lane 101 3", home_phone_number2="+754236999",
                                            notes="some updated notes"))
-    app.session.logout()
 
 
 def test_edit_first_contact_mobile(app):
-    app.session.login(username="admin", password="secret")
     app.contact.edit_first_contact(Contact(mobile_phone_number="+79998887766"))
-    app.session.logout()
