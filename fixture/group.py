@@ -10,6 +10,9 @@ class GroupHelper:
 
     def return_to_groups_page(self):
         wd = self.app.wd
+        # здесь надо еще подумать
+        # если после добавления/изменения/удаления группы не открылась нужная страница - это баг
+        # так что или вместо или вместе c проверкой должно выбрасываться исключение
         if not self.group_page_is_open():
             wd.find_element_by_link_text("group page").click()
 
