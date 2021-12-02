@@ -1,3 +1,6 @@
+from model.group import Group
+
+
 class GroupHelper:
 
     def __init__(self, app):
@@ -16,14 +19,32 @@ class GroupHelper:
         wd = self.app.wd
         return wd.current_url.endswith("/group.php") and len(wd.find_elements_by_name("new")) > 0
 
+    def get_list(self):
+        wd = self.app.wd
+        self.open_groups_page()
+        group_list = []
+        for element in wd.find_elements_by_css_selector("span.group"):
+            text = element.text
+            group_id = element.find_element_by_name("selected[]").get_attribute("value")
+            group_list.append(Group(name=text, id=group_id))
+        # sorted(group_list, key=lambda g: g.id)
+        return group_list
+
     def select_first_group(self):
         wd = self.app.wd
+        self.open_groups_page()
         wd.find_element_by_name("selected[]").click()
 
     def count(self):
         wd = self.app.wd
         self.open_groups_page()
         return len(wd.find_elements_by_name("selected[]"))
+
+    def check_for_test_group(self):
+        # ensure that at list 1 group exists
+        self.open_groups_page()
+        if self.count() == 0:
+            self.create(Group(name="test"))
 
     def update_field_value(self, field_name, value):
         wd = self.app.wd
