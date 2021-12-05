@@ -1,3 +1,6 @@
+from model.contact import Contact
+
+
 class ContactHelper:
 
     def __init__(self, app):
@@ -12,10 +15,27 @@ class ContactHelper:
         wd = self.app.wd
         wd.find_element_by_link_text("home page").click()
 
+    def get_list(self):
+        wd = self.app.wd
+        self.app.open_home_page()
+        raw_list = wd.find_elements_by_xpath("//tr[@name='entry']")
+        contacts_list = []
+        for element in raw_list:
+            contact_id = element.find_element_by_name("selected[]").get_attribute("id")
+            firstname = element.find_element_by_xpath("./td[3]").text
+            lastname = element.find_element_by_xpath("./td[2]").text
+            contacts_list.append(Contact(id=contact_id, firstname=firstname, lastname=lastname))
+        return contacts_list
+
     def count(self):
         wd = self.app.wd
         self.app.open_home_page()
         return len(wd.find_elements_by_name("selected[]"))
+
+    def check_for_test_contact(self):
+        self.app.open_home_page()
+        if self.count() == 0:
+            self.create(Contact(firstname="for test"))
 
     def update_select_field_value(self, field_name, value):
         wd = self.app.wd
@@ -67,11 +87,11 @@ class ContactHelper:
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
         self.return_to_homepage()
 
-    def edit_first_contact(self, contact):
+    def edit_contact_selected_by_id(self, contact):
         wd = self.app.wd
         self.app.open_home_page()
         # init contact modification
-        wd.find_element_by_xpath("//img[@alt='Edit']").click()
+        wd.find_element_by_css_selector(f'[href="edit.php?id={contact.id}"]').click()
         self.fill_contact_form(contact)
         # update contact modification
         wd.find_element_by_name("update").click()
@@ -88,7 +108,4 @@ class ContactHelper:
         # confirm deletion
         alert(wd).accept()
         # wait until deletion complete
-        wd.find_element_by_name("selected[]")
-
-
-
+        wd.find_element_by_css_selector("div.msgbox")

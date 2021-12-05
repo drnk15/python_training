@@ -27,7 +27,6 @@ class GroupHelper:
             text = element.text
             group_id = element.find_element_by_name("selected[]").get_attribute("value")
             group_list.append(Group(name=text, id=group_id))
-        # sorted(group_list, key=lambda g: g.id)
         return group_list
 
     def select_first_group(self):
