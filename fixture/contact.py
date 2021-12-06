@@ -90,7 +90,7 @@ class ContactHelper:
         self.return_to_homepage()
         self.contact_cache = None
 
-    def edit_contact_selected_by_id(self, contact):
+    def edit_some_contact(self, contact):
         wd = self.app.wd
         self.app.open_home_page()
         # init contact modification
@@ -101,12 +101,12 @@ class ContactHelper:
         self.return_to_homepage()
         self.contact_cache = None
 
-    def delete_first_contact(self):
+    def delete_some_contact(self, index):
         wd = self.app.wd
         alert = self.app.alert
         self.app.open_home_page()
         # select first contact
-        wd.find_element_by_name("selected[]").click()
+        wd.find_elements_by_name("selected[]")[index].click()
         # click delete button
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         # confirm deletion
@@ -114,3 +114,6 @@ class ContactHelper:
         # wait until deletion complete
         wd.find_element_by_css_selector("div.msgbox")
         self.contact_cache = None
+
+    def delete_first_contact(self):
+        self.delete_some_contact(0)

@@ -32,10 +32,10 @@ class GroupHelper:
                 self.group_cache.append(Group(name=text, id=group_id))
         return list(self.group_cache)
 
-    def select_first_group(self):
+    def select_group_by_index(self, index):
         wd = self.app.wd
         self.open_groups_page()
-        wd.find_element_by_name("selected[]").click()
+        wd.find_elements_by_name("selected[]")[index].click()
 
     def count(self):
         wd = self.app.wd
@@ -74,22 +74,22 @@ class GroupHelper:
         self.return_to_groups_page()
         self.group_cache = None
 
-    def edit_first_group(self, new_group_data):
+    def edit_some_group(self, group, index):
         wd = self.app.wd
         self.open_groups_page()
         # init group modification
-        self.select_first_group()
+        self.select_group_by_index(index)
         wd.find_element_by_name("edit").click()
-        self.fill_group_form(new_group_data)
+        self.fill_group_form(group)
         # update group modification
         wd.find_element_by_name("update").click()
         self.return_to_groups_page()
         self.group_cache = None
 
-    def delete_first_group(self):
+    def delete_some_group(self, index):
         wd = self.app.wd
         self.open_groups_page()
-        self.select_first_group()
+        self.select_group_by_index(index)
         # submit deletion
         wd.find_element_by_name("delete").click()
         self.return_to_groups_page()
