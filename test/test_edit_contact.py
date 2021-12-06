@@ -15,8 +15,8 @@ def test_edit_first_by_id_contact(app):
                       notes="some updated notes")
     contact.id = old_contacts[0].id
     app.contact.edit_contact_selected_by_id(contact)
+    assert len(old_contacts) == app.contact.count()
     new_contacts = list(sorted(app.contact.get_list(), key=lambda c: c.id))
-    assert len(old_contacts) == len(new_contacts)
     old_contacts[0] = contact
     assert old_contacts == new_contacts
 
@@ -28,10 +28,7 @@ def test_edit_first_contact_lastname(app):
     contact.id = old_contacts[0].id
     contact.firstname = old_contacts[0].firstname
     app.contact.edit_contact_selected_by_id(contact)
+    assert len(old_contacts) == app.contact.count()
     new_contacts = list(sorted(app.contact.get_list(), key=lambda c: c.id))
-    assert len(old_contacts) == len(new_contacts)
     old_contacts[0] = contact
     assert old_contacts == new_contacts
-
-
-
