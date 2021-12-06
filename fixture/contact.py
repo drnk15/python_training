@@ -15,17 +15,19 @@ class ContactHelper:
         wd = self.app.wd
         wd.find_element_by_link_text("home page").click()
 
+    contact_cache = None
+
     def get_list(self):
-        wd = self.app.wd
-        self.app.open_home_page()
-        raw_list = wd.find_elements_by_xpath("//tr[@name='entry']")
-        contacts_list = []
-        for element in raw_list:
-            contact_id = element.find_element_by_name("selected[]").get_attribute("id")
-            firstname = element.find_element_by_xpath("./td[3]").text
-            lastname = element.find_element_by_xpath("./td[2]").text
-            contacts_list.append(Contact(id=contact_id, firstname=firstname, lastname=lastname))
-        return contacts_list
+        if self.contact_cache is None:
+            wd = self.app.wd
+            self.app.open_home_page()
+            self.contact_cache = []
+            for element in wd.find_elements_by_xpath("//tr[@name='entry']"):
+                contact_id = element.find_element_by_name("selected[]").get_attribute("id")
+                firstname = element.find_element_by_xpath("./td[3]").text
+                lastname = element.find_element_by_xpath("./td[2]").text
+                self.contact_cache.append(Contact(id=contact_id, firstname=firstname, lastname=lastname))
+        return list(self.contact_cache)
 
     def count(self):
         wd = self.app.wd
@@ -86,6 +88,7 @@ class ContactHelper:
         # submit creation
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
         self.return_to_homepage()
+        self.contact_cache = None
 
     def edit_contact_selected_by_id(self, contact):
         wd = self.app.wd
@@ -96,6 +99,7 @@ class ContactHelper:
         # update contact modification
         wd.find_element_by_name("update").click()
         self.return_to_homepage()
+        self.contact_cache = None
 
     def delete_first_contact(self):
         wd = self.app.wd
@@ -109,3 +113,4 @@ class ContactHelper:
         alert(wd).accept()
         # wait until deletion complete
         wd.find_element_by_css_selector("div.msgbox")
+        self.contact_cache = None
