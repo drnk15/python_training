@@ -1,5 +1,4 @@
 from model.contact import Contact
-import re
 
 
 class ContactHelper:
@@ -20,14 +19,12 @@ class ContactHelper:
         wd = self.app.wd
         self.app.open_home_page()
         entry = wd.find_elements_by_name("entry")[index]
-        print(entry.find_element_by_css_selector('img[title="Edit"]').get_attribute('alt'))
         entry.find_element_by_css_selector('img[title="Edit"]').click()
 
     def open_contact_details_by_index(self, index):
         wd = self.app.wd
         self.app.open_home_page()
         entry = wd.find_elements_by_name("entry")[index]
-        print(entry.find_element_by_css_selector('img[title="Details"]').get_attribute('alt'))
         entry.find_element_by_css_selector('img[title="Details"]').click()
 
     def get_info_from_edit_page(self, index):
