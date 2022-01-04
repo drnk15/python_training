@@ -10,7 +10,7 @@ class DbFixture:
         self.name = name
         self.user = user
         self.password = password
-        self.connection = pymysql.connect(host=host, database=name, user=user, password=password)
+        self.connection = pymysql.connect(host=host, database=name, user=user, password=password, autocommit=True)
 
     def get_group_list(self):
         group_list = []
@@ -23,6 +23,16 @@ class DbFixture:
         finally:
             cursor.close()
         return group_list
+
+    def get_group_by_id(self, group_id):
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute(f"select group_id, group_name, group_header, group_footer from group_list where group_id={group_id}")
+            for row in cursor:
+                (id, name, header, footer) = row
+                return Group(id=str(id), name=name, header=header, footer=footer)
+        finally:
+            cursor.close()
 
     def destroy(self):
         self.connection.close()
