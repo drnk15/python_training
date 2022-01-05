@@ -11,8 +11,7 @@ def test_edit_some_group_full(app, db, check_ui):
     group.id = random.choice(old_groups).id
     app.group.edit_group_by_id(group)
     new_groups = db.get_group_list()
-    modified_group = [g for g in old_groups if g.id == group.id][0]
-    old_groups[old_groups.index(modified_group)] = group
+    old_groups = [group if g.id == group.id else g for g in old_groups]
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
     if check_ui:
         assert sorted(new_groups, key=Group.id_or_max) == sorted(app.group.get_list(), key=Group.id_or_max)
