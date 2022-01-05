@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import pytest
 from fixture.application import Application
+# импорт DbFixture оставила, чтобы быстро можно было переключиться на другой вариант
 from fixture.db import DbFixture
+from fixture.orm import ORMFixture
 import json
 import os.path
 import importlib
@@ -35,10 +37,11 @@ def app(request):
 @pytest.fixture(scope="session")
 def db(request):
     db_config = load_config(request.config.getoption("--target"))['db']
-    dbfixture = DbFixture(host=db_config['host'], name=db_config['name'], user=db_config['user'], password=db_config['password'])
-    def fin():
-        dbfixture.destroy()
-    request.addfinalizer(fin)
+    dbfixture = ORMFixture(host=db_config['host'], name=db_config['name'], user=db_config['user'], password=db_config['password'])
+    # нужно уточнить, правильно ли переписана фикстура для ORMFixture, нормально ли не использовать никакой финализатор
+    #def fin():
+    #    dbfixture.destroy()
+    #request.addfinalizer(fin)
     return dbfixture
 
 

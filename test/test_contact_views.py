@@ -1,17 +1,24 @@
 import re
 from random import randint
+from model.contact import Contact
 
 
-def test_contact_on_homepage(app):
-    app.contact.check_for_test_contact()
-    index = randint(0, (app.contact.count()-1))
-    contact_from_homepage = app.contact.get_list()[index]
-    contact_from_edit_page = app.contact.get_info_from_edit_page(index)
-    assert contact_from_homepage.lastname == contact_from_edit_page.lastname
-    assert contact_from_homepage.firstname == contact_from_edit_page.firstname
-    assert contact_from_homepage.address == contact_from_edit_page.address
-    assert clear_newlines(contact_from_homepage.all_emails) == contact_from_edit_page.all_emails
-    assert clear_newlines(contact_from_homepage.all_phones) == clear_phones(contact_from_edit_page.all_phones)
+def test_contacts_on_homepage_match_db(app, db):
+    if len(db.get_contact_list()) == 0:
+        app.contact.create(Contact(firstname='test'))
+    contacts_from_homepage = sorted(app.contact.get_list(), key=Contact.id_or_max)
+    contacts_from_db = sorted(db.get_contact_list_with_phones_and_emails(), key=Contact.id_or_max)
+    assert contacts_from_homepage == contacts_from_db
+    # свойства, не прописанные в функции сравнения, сравниваются отдельными списками:
+    addresses_from_homepage = [c.address for c in contacts_from_homepage]
+    addresses_from_db = [c.address for c in contacts_from_db]
+    assert addresses_from_homepage == addresses_from_db
+    emails_from_homepage = [clear_newlines(c.all_emails) for c in contacts_from_homepage]
+    emails_from_db = [c.all_emails for c in contacts_from_db]
+    assert emails_from_homepage == emails_from_db
+    phones_from_homepage = [clear_phones(c.all_phones) for c in contacts_from_homepage]
+    phones_from_db = [clear_phones(c.all_phones) for c in contacts_from_db]
+    assert phones_from_homepage == phones_from_db
 
 
 #def test_contact_on_detail_page(app):
