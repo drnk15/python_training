@@ -166,7 +166,7 @@ class ContactHelper:
         self.return_to_homepage()
         self.contact_cache = None
 
-    def select_contact_by_id(self, id, wd):
+    def select_contact_by_id(self, id):
         wd = self.app.wd
         wd.find_element_by_css_selector(f"input[value='{id}']").click()
 
@@ -189,7 +189,7 @@ class ContactHelper:
         alert = self.app.alert
         self.app.open_home_page()
         # select contact by id
-        self.select_contact_by_id(id, wd)
+        self.select_contact_by_id(id)
         # click delete button
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         # confirm deletion
@@ -200,3 +200,32 @@ class ContactHelper:
 
     def delete_first_contact(self):
         self.delete_some_contact(0)
+
+    def filter_contacts_by_group(self, group):
+        wd = self.app.wd
+        self.app.open_home_page()
+        wd.find_element_by_css_selector('select[name="group"]').click()
+        wd.find_elements_by_css_selector(f'option[value="{group.id}"]')[0].click()
+
+    def add_to_group(self, contact, group):
+        wd = self.app.wd
+        self.app.open_home_page()
+        self.select_contact_by_id(contact.id)
+        # select group for contact
+        wd.find_element_by_css_selector('select[name="to_group"]').click()
+        wd.find_elements_by_css_selector(f'option[value="{group.id}"]')[1].click()
+        # add contact to the group
+        wd.find_element_by_css_selector('input[value="Add to"]').click()
+        # go to the group page
+        wd.find_element_by_css_selector(f'a[href="./?group={group.id}"]').click()
+
+    def remove_from_group(self, contact, group):
+        wd = self.app.wd
+        self.app.open_home_page()
+        # filter contacts by group
+        self.filter_contacts_by_group(group)
+        self.select_contact_by_id(contact.id)
+        # remove contact from group
+        wd.find_element_by_css_selector('input[name="remove"]').click()
+        # go to the group page
+        wd.find_element_by_css_selector(f'a[href="./?group={group.id}"]').click()
